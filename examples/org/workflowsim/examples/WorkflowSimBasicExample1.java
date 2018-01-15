@@ -63,9 +63,9 @@ public class WorkflowSimBasicExample1 {
         LinkedList<CondorVM> list = new LinkedList<>();
 
         //VM Parameters
-        long size = 10000; //image size (MB)
-        int ram = 512; //vm memory (MB)
-        int mips = 1000;
+        long size = 100000; //image size (MB)
+        int ram = 12288; //vm memory (MB)
+        int mips = 6000;
         long bw = 1000;
         int pesNumber = 1; //number of cpus
         String vmm = "Xen"; //VMM name
@@ -97,7 +97,7 @@ public class WorkflowSimBasicExample1 {
             /**
              * Should change this based on real physical path
              */
-            String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
+            String daxPath = "/home/ceag/WorkflowGenerator-master/SyntheticWorkflows/data_15_out.xml";
             File daxFile = new File(daxPath);
             if (!daxFile.exists()) {
                 Log.printLine("Warning: Please replace daxPath with the physical path in your working environment!");
@@ -111,7 +111,7 @@ public class WorkflowSimBasicExample1 {
              */
             Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN;
             Parameters.PlanningAlgorithm pln_method = Parameters.PlanningAlgorithm.INVALID;
-            ReplicaCatalog.FileSystem file_system = ReplicaCatalog.FileSystem.SHARED;
+            ReplicaCatalog.FileSystem file_system = ReplicaCatalog.FileSystem.LOCAL;
 
             /**
              * No overheads
@@ -169,6 +169,14 @@ public class WorkflowSimBasicExample1 {
             List<Job> outputList0 = wfEngine.getJobsReceivedList();
             CloudSim.stopSimulation();
             printJobList(outputList0);
+
+            double tt;
+            for (Job jb : outputList0 ){
+            	tt = jb.getCloudletId();
+            	Log.printLine("ID: "+tt+" time: " + jb.getExecStartTime() + " length: " + jb.getCloudletLength());
+            }
+            if (Parameters.getSchedulingAlgorithm() != Parameters.SchedulingAlgorithm.PREDICT) {
+            	Log.printLine("test: "+Parameters.getSchedulingAlgorithm() + " no es predictive y " + "cantidad de trabajos: " + outputList0.size());}
         } catch (Exception e) {
             Log.printLine("The simulation has been terminated due to an unexpected error");
         }
@@ -186,14 +194,18 @@ public class WorkflowSimBasicExample1 {
         //    a Machine.
         for (int i = 1; i <= 20; i++) {
             List<Pe> peList1 = new ArrayList<>();
-            int mips = 2000;
+            int mips = 6000;
             // 3. Create PEs and add these into the list.
             //for a quad-core machine, a list of 4 PEs is required:
             peList1.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
             peList1.add(new Pe(1, new PeProvisionerSimple(mips)));
+            peList1.add(new Pe(2, new PeProvisionerSimple(mips)));
+            peList1.add(new Pe(3, new PeProvisionerSimple(mips)));
 
+            
+            
             int hostId = 0;
-            int ram = 2048; //host memory (MB)
+            int ram = 12288; //host memory (MB)
             long storage = 1000000; //host storage
             int bw = 10000;
             hostList.add(

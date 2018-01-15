@@ -144,7 +144,7 @@ public class ReclusteringEngine {
         for (Task task : list) {
             int depth = task.getDepth();
             if (!map.containsKey(depth)) {
-                map.put(depth, new ArrayList<>());
+                map.put(depth, new ArrayList<Task>());
             }
             List<Task> dl = map.get(depth);
             if (!dl.contains(task)) {

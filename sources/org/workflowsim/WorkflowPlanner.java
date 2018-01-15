@@ -70,7 +70,7 @@ public final class WorkflowPlanner extends SimEntity {
     public WorkflowPlanner(String name, int schedulers) throws Exception {
         super(name);
 
-        setTaskList(new ArrayList<>());
+        setTaskList(new ArrayList<Task>());
         this.clusteringEngine = new ClusteringEngine(name + "_Merger_", schedulers);
         this.clusteringEngineId = this.clusteringEngine.getId();
         this.parser = new WorkflowParser(getClusteringEngine().getWorkflowEngine().getSchedulerId(0));

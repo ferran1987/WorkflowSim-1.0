@@ -152,7 +152,7 @@ public class HorizontalImpactBalancing extends BalancingMethod {
                 double factor = set.getImpactFactor();
 
                 if(!map.containsKey(factor)){
-                    map.put(factor, new ArrayList<>());
+                    map.put(factor, new ArrayList<TaskSet>());
                 }
                 List<TaskSet> list = map.get(factor);
                 if(!list.contains(set)){

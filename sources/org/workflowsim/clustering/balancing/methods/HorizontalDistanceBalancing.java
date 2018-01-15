@@ -220,7 +220,7 @@ public class HorizontalDistanceBalancing extends HorizontalImpactBalancing {
                 dis = distance;
             }
             if (!map.containsKey(distance)) {
-                map.put(distance, new ArrayList<>());
+                map.put(distance, new ArrayList<TaskSet>());
             }
             ArrayList<TaskSet> list = (ArrayList) map.get(distance);
             if (!list.contains(set)) {

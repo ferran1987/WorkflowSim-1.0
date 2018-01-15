@@ -89,7 +89,7 @@ public class HEFTPlanningAlgorithm extends BasePlanningAlgorithm {
 
         for (Object vmObject : getVmList()) {
             CondorVM vm = (CondorVM) vmObject;
-            schedules.put(vm, new ArrayList<>());
+            schedules.put(vm, new ArrayList<Event>());
         }
 
         // Prioritization phase

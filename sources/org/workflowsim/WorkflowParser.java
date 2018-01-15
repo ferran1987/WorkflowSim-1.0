@@ -22,6 +22,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.math3.stat.regression.*;
+import java.math.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.cloudbus.cloudsim.Log;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -49,6 +53,11 @@ public final class WorkflowParser {
      * The path to DAX files.
      */
     private final List<String> daxPaths;
+    /**
+     * Scheduling Algorithm that will be used.
+     */
+    private final Parameters.SchedulingAlgorithm schedMethod;
+
     /**
      * All tasks.
      */
@@ -98,8 +107,9 @@ public final class WorkflowParser {
         this.daxPath = Parameters.getDaxPath();
         this.daxPaths = Parameters.getDAXPaths();
         this.jobIdStartsFrom = 1;
+        this.schedMethod = Parameters.getSchedulingAlgorithm(); // to identify if predictive is selected
 
-        setTaskList(new ArrayList<>());
+        setTaskList(new ArrayList<Task>());
     }
 
     /**
@@ -129,7 +139,253 @@ public final class WorkflowParser {
             setDepth(cTask, task.getDepth() + 1);
         }
     }
+    
+    
+    
+    
+    /**
+     * Parse a DAX file with jdom
+     */
+    private double parsePredictFile(String path) {
+    	
+    	List<Task> predTask = new ArrayList<Task>();
+    	Map<String, Task> mName2PredicTask =  new HashMap<>();
+        
+    	int jobIdStartsFromPredict=0;
+    	double PredictiveTime=0;
+        try {
 
+            SAXBuilder builder = new SAXBuilder();
+            //parse using builder to get DOM representation of the XML file
+            Document dom = builder.build(new File(path));
+            Element root = dom.getRootElement();
+            List<Element> list = root.getChildren();
+            for (Element node : list) {
+                switch (node.getName().toLowerCase()) {
+                    case "job":
+                        long length = 0;
+                        int numberOfCores = 1;
+
+                        String nodeName = node.getAttributeValue("id");
+                        String nodeType = node.getAttributeValue("name");
+
+                        double pesUtil;
+                        if (node.getAttributeValue("cores") != null) {
+                            String coresUtil = node.getAttributeValue("cores");
+                            pesUtil = Double.parseDouble(coresUtil);
+                            if (pesUtil < 1) {
+                            	pesUtil = 1;
+                            }
+                            numberOfCores = (int) pesUtil;
+                        } else {
+                            Log.printLine("Cannot find cores for " + nodeName + ",set it to be 1 - Predict");
+                        }   //multiple the scale, by default it is 1.0
+                        
+                        
+                        double runtime;
+                        if (node.getAttributeValue("runtime") != null) {
+                            String nodeTime = node.getAttributeValue("runtime");
+                            runtime = 1000 * Double.parseDouble(nodeTime);
+                            if (runtime < 100) {
+                                runtime = 100;
+                            }
+                            length = (long) runtime;
+                        } else {
+                            Log.printLine("Cannot find runtime for " + nodeName + ",set it to be 0 - Predict");
+                        }   //multiple the scale, by default it is 1.0
+                        length *= Parameters.getRuntimeScale();
+
+                        
+                        List<Element> fileList = node.getChildren();
+                        List<FileItem> mFileList = new ArrayList<>();
+                        for (Element file : fileList) {
+                            if (file.getName().toLowerCase().equals("uses")) {
+                                String fileName = file.getAttributeValue("name");//DAX version 3.3
+                                if (fileName == null) {
+                                    fileName = file.getAttributeValue("file");//DAX version 3.0
+                                }
+                                if (fileName == null) {
+                                    Log.print("Error in parsing xml");
+                                }
+
+                                String inout = file.getAttributeValue("link");
+                                double size = 0.0;
+
+
+                                String fileSize = file.getAttributeValue("size");
+                                if (fileSize != null) {
+                                    size = Double.parseDouble(fileSize) /*/ 1024*/;
+                                } else {
+                                    Log.printLine("File Size not found for " + fileName);
+                                }
+
+                                /**
+                                 * a bug of cloudsim, size 0 causes a problem. 1
+                                 * is ok.
+                                 */
+                                if (size == 0) {
+                                    size++;
+                                }
+                                /**
+                                 * Sets the file type 1 is input 2 is output
+                                 */
+                                FileType type = FileType.NONE;
+                                switch (inout) {
+                                    case "input":
+                                        type = FileType.INPUT;
+                                         break;
+                                    case "output":
+                                        type = FileType.OUTPUT;
+                                         break;
+                                    default:
+                                        Log.printLine("Parsing Error");
+                                        break;
+                                }
+                                FileItem tFile;
+                                /*
+                                 * Already exists an input file (forget output file)
+                                 */
+                                if (size < 0) {
+                                    /*
+                                     * Assuming it is a parsing error
+                                     */
+                                    size = 0 - size;
+                                    Log.printLine("Size is negative, I assume it is a parser error");
+                                }
+                                /*
+                                 * Note that CloudSim use size as MB, in this case we use it as Byte
+                                 */
+                                if (type == FileType.OUTPUT) {
+                                    /**
+                                     * It is good that CloudSim does tell
+                                     * whether a size is zero
+                                     */
+                                    tFile = new FileItem(fileName, size);
+                                } else if (ReplicaCatalog.containsFile(fileName)) {
+                                    tFile = ReplicaCatalog.getFile(fileName);
+                                } else {
+
+                                    tFile = new FileItem(fileName, size);
+                                    ReplicaCatalog.setFile(fileName, tFile);
+                                }
+
+                                tFile.setType(type);
+                                mFileList.add(tFile);
+
+                            }
+                        }
+                        Task task;
+                        
+                        //In case of multiple workflow submission. Make sure the jobIdStartsFrom is consistent.
+                      //  synchronized (this) {
+                            task = new Task(jobIdStartsFromPredict, length);
+                            jobIdStartsFromPredict++;
+                  //      }
+                        
+                        task.setType(nodeType);
+                        task.setUserId(userId);
+                        task.setNumberOfPes(numberOfCores);
+                        mName2PredicTask.put(nodeName, task);
+                        for (FileItem file : mFileList) {
+                            task.addRequiredFile(file.getName());
+                        }
+                        task.setFileList(mFileList);
+                        predTask.add(task);
+
+                        break;
+
+                }
+            }
+            /**
+             * Clean them so as to save memory. Parsing workflow may take much
+             * memory
+             */
+            mName2PredicTask.clear();
+            double Isize= 0.0;
+            double Osize= 0.0;
+            double [][] thrS1m= new double [predTask.size()][2];
+            double [] rTime = new double [predTask.size()];
+
+        	int i=0;
+
+            for (Task ttask : predTask){
+            	for (FileItem filee : ttask.getFileList()){
+            		if ((filee.getType()==Parameters.FileType.INPUT) && (RegexMatches(filee.getName(), "hgA1f_")!=0) ){
+            			Isize += filee.getSize();
+            			}
+            		if (filee.getType()==Parameters.FileType.OUTPUT){ 
+            			Osize += filee.getSize();
+            			}
+            	}
+            	thrS1m[i][1]=Isize/1073741824;
+            	thrS1m[i][0]=ttask.getNumberOfPes();
+            	rTime[i]=ttask.getCloudletLength();
+            	i++;
+            }
+            double[] test = OLSCalculation(rTime,thrS1m);
+            double[] res= new double[rTime.length];
+            for(int iii = 0; iii < rTime.length; iii++){
+            	res[iii]=fn(rTime[iii], test);
+            }
+            for(int d =0 ; d < res.length; ++d) Log.printLine(d+" res: "+ res[d]);
+            Log.printLine("testing: "+ fn(0.00001403, test));
+        } catch (JDOMException jde) {
+            Log.printLine("JDOM Exception;Please make sure your dax file is valid");
+
+        } catch (IOException ioe) {
+            Log.printLine("IO Exception;Please make sure dax.path is correctly set in your config file");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.printLine("Parsing Exception");
+        }
+        return PredictiveTime;
+    } 
+   
+    public static double fn(double x, double[] coe){
+        double result = 0;
+        for(int i = 0; i < coe.length; ++i)
+            result += coe[i] *Math.pow(x, i); // 1
+        	//result += coe[0]*(1/x)*x+x*coe[1]*Math.exp(-coe[2]*x);
+        return result;
+    }
+   
+   private static double[] OLSCalculation(double[] y, double[][] x){
+       OLSMultipleLinearRegression ols = new OLSMultipleLinearRegression();
+	   double[] coe = null;
+	   try{
+		   ols.newSampleData(y, x);   
+	   }
+	   catch(IllegalArgumentException e){
+		   Log.printLine("Can not sample data: ");
+		   e.printStackTrace();
+		   return coe;
+	   }
+	   try{
+		   coe = ols.estimateRegressionParameters();
+	   }
+	   catch(IllegalArgumentException e){
+		   Log.printLine("Can not estimate parameters: ");
+		   e.printStackTrace();
+		   return coe;
+	   }
+	   
+	   return coe;
+
+   }
+
+ 
+   public static int RegexMatches( String input, String reg ) {
+      Pattern p = Pattern.compile(reg);
+      Matcher m = p.matcher(input);   // get a matcher object
+      int count = 0;
+      boolean c = false;
+      while(m.find()) {
+         count++;
+      }
+      return count;
+   }
+    
     /**
      * Parse a DAX file with jdom
      */
@@ -153,18 +409,28 @@ public final class WorkflowParser {
                          * is 0.1. Otherwise CloudSim would ignore this task.
                          * BUG/#11
                          */
-                        double runtime;
-                        if (node.getAttributeValue("runtime") != null) {
+                        double runtime=0;
+
+                        if (Parameters.getSchedulingAlgorithm()==Parameters.SchedulingAlgorithm.PREDICT){
+                        	runtime=parsePredictFile("/home/ceag/WorkflowGenerator-master/SyntheticWorkflows/"+nodeType+".xml");
+                            if (runtime < 100) {
+                                runtime = 100;
+                            }
+                            length = (long) runtime;
+                        }
+
+                        if ((node.getAttributeValue("runtime") != null) && (Parameters.getSchedulingAlgorithm()!= Parameters.SchedulingAlgorithm.PREDICT)) {
                             String nodeTime = node.getAttributeValue("runtime");
                             runtime = 1000 * Double.parseDouble(nodeTime);
                             if (runtime < 100) {
                                 runtime = 100;
                             }
                             length = (long) runtime;
-                        } else {
+                        } else if (runtime == 0) {
                             Log.printLine("Cannot find runtime for " + nodeName + ",set it to be 0");
                         }   //multiple the scale, by default it is 1.0
                         length *= Parameters.getRuntimeScale();
+
                         List<Element> fileList = node.getChildren();
                         List<FileItem> mFileList = new ArrayList<>();
                         for (Element file : fileList) {

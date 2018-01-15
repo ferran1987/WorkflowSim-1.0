@@ -79,9 +79,9 @@ public final class WorkflowEngine extends SimEntity {
     public WorkflowEngine(String name, int schedulers) throws Exception {
         super(name);
 
-        setJobsList(new ArrayList<>());
-        setJobsSubmittedList(new ArrayList<>());
-        setJobsReceivedList(new ArrayList<>());
+        setJobsList(new ArrayList<Job>());
+        setJobsSubmittedList(new ArrayList<Job>());
+        setJobsReceivedList(new ArrayList<Job>());
 
         jobsSubmitted = 0;
 

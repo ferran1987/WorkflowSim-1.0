@@ -87,10 +87,10 @@ public final class ClusteringEngine extends SimEntity {
      */
     public ClusteringEngine(String name, int schedulers) throws Exception {
         super(name);
-        setJobList(new ArrayList<>());
-        setTaskList(new ArrayList<>());
-        setTaskSubmittedList(new ArrayList<>());
-        setTaskReceivedList(new ArrayList<>());
+        setJobList(new ArrayList<Job>());
+        setTaskList(new ArrayList<Task>());
+        setTaskSubmittedList(new ArrayList<Task>());
+        setTaskReceivedList(new ArrayList<Task>());
 
         cloudletsSubmitted = 0;
         this.workflowEngine = new WorkflowEngine(name + "_Engine_0", schedulers);

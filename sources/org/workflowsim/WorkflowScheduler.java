@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.cloudbus.cloudsim.Cloudlet;
 import org.cloudbus.cloudsim.DatacenterBroker;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.CloudSimTags;
@@ -33,6 +34,7 @@ import org.workflowsim.scheduling.MaxMinSchedulingAlgorithm;
 import org.workflowsim.scheduling.MinMinSchedulingAlgorithm;
 import org.workflowsim.scheduling.RoundRobinSchedulingAlgorithm;
 import org.workflowsim.scheduling.StaticSchedulingAlgorithm;
+import org.workflowsim.scheduling.PredictiveSchedulingAlgorithm;
 import org.workflowsim.utils.Parameters;
 import org.workflowsim.utils.Parameters.SchedulingAlgorithm;
 
@@ -144,6 +146,9 @@ public class WorkflowScheduler extends DatacenterBroker {
             //by default it is Static
             case FCFS:
                 algorithm = new FCFSSchedulingAlgorithm();
+                break;
+            case PREDICT:
+                algorithm = new PredictiveSchedulingAlgorithm();
                 break;
             case MINMIN:
                 algorithm = new MinMinSchedulingAlgorithm();
@@ -362,7 +367,7 @@ public class WorkflowScheduler extends DatacenterBroker {
      */
     @Override
     protected void processResourceCharacteristicsRequest(SimEvent ev) {
-        setDatacenterCharacteristicsList(new HashMap<>());
+        setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
         Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
                 + getDatacenterIdsList().size() + " resource(s)");
         for (Integer datacenterId : getDatacenterIdsList()) {

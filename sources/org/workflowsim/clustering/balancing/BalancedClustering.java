@@ -169,7 +169,7 @@ public class BalancedClustering extends BasicClustering {
                 set.hasChecked = true;
                 int depth = getDepth(set);
                 if (!map.containsKey(depth)) {
-                    map.put(depth, new ArrayList<>());
+                    map.put(depth, new ArrayList<TaskSet>());
                 }
                 List list = map.get(depth);
                 list.add(set);

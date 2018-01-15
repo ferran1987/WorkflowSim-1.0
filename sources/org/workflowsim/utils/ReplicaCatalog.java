@@ -119,7 +119,7 @@ public class ReplicaCatalog {
      */
     public static void addFileToStorage(String file, String storage) {
         if (!dataReplicaCatalog.containsKey(file)) {
-            dataReplicaCatalog.put(file, new ArrayList<>());
+            dataReplicaCatalog.put(file, new ArrayList<String>());
         }
         List<String> list = getStorageList(file);
         if (!list.contains(storage)) {

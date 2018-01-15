@@ -128,7 +128,7 @@ public class FailureMonitor {
             case MONITOR_VM:
 
                 if (!vm2record.containsKey(record.vmId)) {
-                    vm2record.put(record.vmId, new ArrayList<>());
+                    vm2record.put(record.vmId, new ArrayList<FailureRecord>());
                 }
                 vm2record.get(record.vmId).add(record);
 
@@ -136,7 +136,7 @@ public class FailureMonitor {
             case MONITOR_JOB:
 
                 if (!type2record.containsKey(record.depth)) {
-                    type2record.put(record.depth, new ArrayList<>());
+                    type2record.put(record.depth, new ArrayList<FailureRecord>());
                 }
                 type2record.get(record.depth).add(record);
 

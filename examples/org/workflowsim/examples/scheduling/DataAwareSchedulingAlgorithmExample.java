@@ -59,7 +59,7 @@ public class DataAwareSchedulingAlgorithmExample extends DHEFTPlanningAlgorithmE
             /**
              * Should change this based on real physical path
              */
-            String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
+            String daxPath = "/home/ceag/WorkflowGenerator-master/SyntheticWorkflows/Epigenomics_24.xml";
 
             File daxFile = new File(daxPath);
             if (!daxFile.exists()) {
@@ -133,6 +133,7 @@ public class DataAwareSchedulingAlgorithmExample extends DHEFTPlanningAlgorithmE
             List<Job> outputList0 = wfEngine.getJobsReceivedList();
             CloudSim.stopSimulation();
             printJobList(outputList0);
+
         } catch (Exception e) {
             Log.printLine("The simulation has been terminated due to an unexpected error");
         }
