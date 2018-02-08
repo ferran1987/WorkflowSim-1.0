@@ -54,10 +54,13 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
              * exact vmNum would be smaller than that. Take care.
              */
             int vmNum = 5;//number of vms;
+        	//System.out.println("MINMINSchAlg.j main: int vNum="+vmNum+", daxPath");
             /**
              * Should change this based on real physical path
              */
-            String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
+            String daxPath = "/home/ferran/Escriptori/EclipseFerran/WorkflowSim-1.0-Predict/config/dax/Montage_100.xml";
+            //String daxPath = "/home/ferran/Escriptori/EclipseFerran/data_15_out.xml";
+            //String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
 
             File daxFile = new File(daxPath);
             if (!daxFile.exists()) {
@@ -70,8 +73,10 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
              * algorithm should be static such that the scheduler would not
              * override the result of the planner
              */
+        	//System.out.println("MINMINSchAl.j main: Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN");
             Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN;
-            Parameters.PlanningAlgorithm pln_method = Parameters.PlanningAlgorithm.INVALID;
+        	//System.out.println("Nom Alg:"+sch_method.name()+". Classe:"+sch_method.getClass().getName());
+        	Parameters.PlanningAlgorithm pln_method = Parameters.PlanningAlgorithm.INVALID;
             ReplicaCatalog.FileSystem file_system = ReplicaCatalog.FileSystem.LOCAL;
 
             /**
@@ -88,11 +93,14 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
             /**
              * Initialize static parameters
              */
+        	System.out.println("MINMIN.j main: Parameters.init(vmNum="+vmNum+", daxPath, null,null, op, cp, sch_method, pln_method,null,0)");
             Parameters.init(vmNum, daxPath, null,
                     null, op, cp, sch_method, pln_method,
                     null, 0);
+
             ReplicaCatalog.init(file_system);
 
+        	
             // before creating any entities.
             int num_user = 1;   // number of grid users
             Calendar calendar = Calendar.getInstance();
@@ -100,13 +108,19 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
 
             // Initialize the CloudSim library
             CloudSim.init(num_user, calendar, trace_flag);
-
-            WorkflowDatacenter datacenter0 = createDatacenter("Datacenter_0");
-
+            // no poso WFSBasicEx1.createDatacenter("Datacenter_0") ja q WFSBasicEx1.j es besnet (extend) d MINMINSchAlg.j
+        	System.out.println("MINMIN.j main: WfDatac datacenter0 = createDatac(Datacenter_0)");
+            WorkflowDatacenter datacenter0 = createDatacenter("Datacenter_0"); // WorkflowDatacenter.ja dexistir, i la funcio WorkflowDatacenter createDatacenter tambe
+            System.out.println("MINMIN.j main: datacenter0="+datacenter0);
+            //System.out.println("MINMINSchAlg.j: main Nom centre dades:"+datacenter0.getName()+". Classe:"+datacenter0.getClass().getName());
+            //System.out.println("ddd"+datacenter0);//org.wfs.WorkflowDatacenter@135fbaa4
             /**
              * Create a WorkflowPlanner with one schedulers.
              */
+        	//System.out.println("MINMIN.j main: WfPla wfPlanner = new WfPlan(planner_0, 1) ");
             WorkflowPlanner wfPlanner = new WorkflowPlanner("planner_0", 1);
+            //System.out.println("wfPlanner"+wfPlanner); //org.wfs.WorkflowPlanner@2b193f2d
+
             /**
              * Create a WorkflowEngine.
              */
@@ -115,8 +129,13 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
              * Create a list of VMs.The userId of a vm is basically the id of
              * the scheduler that controls this vm.
              */
-            List<CondorVM> vmlist0 = createVM(wfEngine.getSchedulerId(0), Parameters.getVmNum());
+            
+            System.out.println("MINMIN.j main: List<CondorVM> vmlist0 = createVM(wfEngine.getSchedulerId(0), Parameters.getVmNum()="+Parameters.getVmNum()+");");
 
+            //System.out.println("MINMINSchAlg.j: main AB crida HEFTPlaAlg.j createVM");
+            List<CondorVM> vmlist0 = createVM(wfEngine.getSchedulerId(0), Parameters.getVmNum());
+            
+            System.out.println("MINMIN.j: vmlist0="+vmlist0);
             /**
              * Submits this list of vms to this WorkflowEngine.
              */
@@ -126,8 +145,11 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
              * Binds the data centers with the scheduler.
              */
             wfEngine.bindSchedulerDatacenter(datacenter0.getId(), 0);
+        	System.out.println("MINMIN.j main: CloudSim.startSimulation");
 
             CloudSim.startSimulation();
+        	System.out.println("MINMIN.j main: DP CloudSim.startSimulation");
+
             List<Job> outputList0 = wfEngine.getJobsReceivedList();
             CloudSim.stopSimulation();
             printJobList(outputList0);

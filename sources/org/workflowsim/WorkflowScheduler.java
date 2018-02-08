@@ -35,6 +35,7 @@ import org.workflowsim.scheduling.MinMinSchedulingAlgorithm;
 import org.workflowsim.scheduling.RoundRobinSchedulingAlgorithm;
 import org.workflowsim.scheduling.StaticSchedulingAlgorithm;
 import org.workflowsim.scheduling.PredictiveSchedulingAlgorithm;
+import org.workflowsim.scheduling.BioBackfillSchedulingAlgorithm;
 import org.workflowsim.utils.Parameters;
 import org.workflowsim.utils.Parameters.SchedulingAlgorithm;
 
@@ -99,6 +100,7 @@ public class WorkflowScheduler extends DatacenterBroker {
         switch (ev.getTag()) {
             // Resource characteristics request
             case CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST:
+            	System.out.print("         WfSchr.j processEvent: crida processResourceCharacteristicsRequest(ev)\n");
                 processResourceCharacteristicsRequest(ev);
                 break;
             // Resource characteristics answer
@@ -107,6 +109,7 @@ public class WorkflowScheduler extends DatacenterBroker {
                 break;
             // VM Creation answer
             case CloudSimTags.VM_CREATE_ACK:
+            	System.out.println("         WfSchr.j processEvent: crida processVmCreate");
                 processVmCreate(ev);
                 break;
             // A finished cloudlet returned
@@ -120,9 +123,11 @@ public class WorkflowScheduler extends DatacenterBroker {
                 shutdownEntity();
                 break;
             case CloudSimTags.CLOUDLET_SUBMIT:
+                System.out.println("         WfSchr.j processEvent: va cridant processCloudletSubmit");
                 processCloudletSubmit(ev);
                 break;
             case WorkflowSimTags.CLOUDLET_UPDATE:
+                System.out.println("         WfSchr.j processEvent: va cridant processCloudletUpdate");
                 processCloudletUpdate(ev);
                 break;
             default:
@@ -141,7 +146,7 @@ public class WorkflowScheduler extends DatacenterBroker {
         BaseSchedulingAlgorithm algorithm;
 
         // choose which algorithm to use. Make sure you have add related enum in
-        //Parameters.java
+        //Parameters.j
         switch (name) {
             //by default it is Static
             case FCFS:
@@ -167,6 +172,9 @@ public class WorkflowScheduler extends DatacenterBroker {
                 break;
             case ROUNDROBIN:
                 algorithm = new RoundRobinSchedulingAlgorithm();
+                break;
+            case BIOBACKFILL:
+                algorithm = new BioBackfillSchedulingAlgorithm();
                 break;
             default:
                 algorithm = new StaticSchedulingAlgorithm();
@@ -198,7 +206,7 @@ public class WorkflowScheduler extends DatacenterBroker {
              */
             if (VmList.getById(getVmList(), vmId) != null) {
                 getVmsCreatedList().add(VmList.getById(getVmList(), vmId));
-                Log.printLine(CloudSim.clock() + ": " + getName() + ": VM #" + vmId
+                Log.printLine("         WfSchr.j processVmCreate:" + CloudSim.clock() + ": " + getName() + ": VM #" + vmId
                         + " has been created in Datacenter #" + datacenterId + ", Host #"
                         + VmList.getById(getVmsCreatedList(), vmId).getHost().getId());
             }
@@ -244,9 +252,12 @@ public class WorkflowScheduler extends DatacenterBroker {
 
         BaseSchedulingAlgorithm scheduler = getScheduler(Parameters.getSchedulingAlgorithm());
         scheduler.setCloudletList(getCloudletList());
+        System.out.println("         WfSchr.j BaseSchedulingAlgorithm scheduler = getScheduler(Parameters.getSchedulingAlgorithm())\n");
+        System.out.println("         WfSchr.j processCloudletUpdate(): scheduler.setCloudletList(getCloudletList()");
         scheduler.setVmList(getVmsCreatedList());
 
         try {
+            System.out.println("         WfSchr.j processCloudletUpdate(): va cridant MinMin.j run (NOVA IT)");
             scheduler.run();
         } catch (Exception e) {
             Log.printLine("Error in configuring scheduler_method");
@@ -308,7 +319,8 @@ public class WorkflowScheduler extends DatacenterBroker {
      */
     @Override
     public void startEntity() {
-        Log.printLine(getName() + " is starting...");
+    	//System.out.println("      WorkflowScheduler.j startEntity");
+        Log.printLine("      WfSchr.j startEntity: "+ getName() + " is starting...");
         // this resource should register to regional GIS.
         // However, if not specified, then register to system GIS (the
         // default CloudInformationService) entity.
@@ -351,7 +363,10 @@ public class WorkflowScheduler extends DatacenterBroker {
     protected void processCloudletSubmit(SimEvent ev) {
         List<Job> list = (List) ev.getData();
         getCloudletList().addAll(list);
-
+        System.out.println("         WfSchr.j processCloudletSubmit: List<Job> list = (List) ev.getData()");
+        System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
+        System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList()="+getCloudletList());
+        Log.printLine("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
         sendNow(this.getId(), WorkflowSimTags.CLOUDLET_UPDATE);
         if (!processCloudletSubmitHasShown) {
             processCloudletSubmitHasShown = true;
@@ -368,7 +383,7 @@ public class WorkflowScheduler extends DatacenterBroker {
     @Override
     protected void processResourceCharacteristicsRequest(SimEvent ev) {
         setDatacenterCharacteristicsList(new HashMap<Integer, DatacenterCharacteristics>());
-        Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
+        Log.printLine("         WfSchr.j processResourceCharacteristicsRequest:" + CloudSim.clock() + ": " + getName() + ": Cloud Resource List received with "
                 + getDatacenterIdsList().size() + " resource(s)");
         for (Integer datacenterId : getDatacenterIdsList()) {
             sendNow(datacenterId, CloudSimTags.RESOURCE_CHARACTERISTICS, getId());

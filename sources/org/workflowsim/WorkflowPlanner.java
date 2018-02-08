@@ -277,8 +277,8 @@ public final class WorkflowPlanner extends SimEntity {
      */
     @Override
     public void startEntity() {
-        Log.printLine("Starting WorkflowSim " + Parameters.getVersion());
-        Log.printLine(getName() + " is starting...");
+        Log.printLine("      WfPla.j startEntity: Starting WorkflowSim " + Parameters.getVersion());
+        Log.printLine("      WfPla.j startEntity: "+ getName() + " is starting...");
         schedule(getId(), 0, WorkflowSimTags.START_SIMULATION);
     }
 

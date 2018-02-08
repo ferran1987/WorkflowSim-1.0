@@ -400,8 +400,8 @@ public abstract class SimEntity implements Cloneable {
 	public abstract void shutdownEntity();
 
 	public void run() {
+		//System.out.println("      SimEntity.j run(): va cridant SimEntity.j processEvent (buit)->WorkflowScheduler.j processEvent");
 		SimEvent ev = evbuf != null ? evbuf : getNextEvent();
-
 		while (ev != null) {
 			processEvent(ev);
 			if (state != RUNNABLE) {

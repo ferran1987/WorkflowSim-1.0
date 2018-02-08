@@ -36,7 +36,7 @@ public class Parameters {
     public enum SchedulingAlgorithm {
 
         MAXMIN, MINMIN, MCT, DATA, PREDICT,
-        STATIC, FCFS, ROUNDROBIN, INVALID
+        STATIC, FCFS, ROUNDROBIN, BIOBACKFILL, INVALID
     }
     
     /**
@@ -194,7 +194,7 @@ public class Parameters {
             OverheadParameters op, ClusteringParameters cp,
             SchedulingAlgorithm scheduler, PlanningAlgorithm planner, String rMethod,
             long dl) {
-
+    	System.out.println("   Parameters.j init(int vm="+vm+",...): vmNum = vm");
         cParams = cp;
         vmNum = vm;
         daxPath = dax;
@@ -228,6 +228,7 @@ public class Parameters {
             OverheadParameters op, ClusteringParameters cp,
             SchedulingAlgorithm scheduler, PlanningAlgorithm planner, String rMethod,
             long dl) {
+    	System.out.println("  NO ENTRA");
 
         cParams = cp;
         vmNum = vm;

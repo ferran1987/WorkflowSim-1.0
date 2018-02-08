@@ -91,6 +91,7 @@ public class WorkflowSimAllExamplesTester {
             FCFSSchedulingAlgorithmExample.main(args);
             MAXMINSchedulingAlgorithmExample.main(args);
             MCTSchedulingAlgorithmExample.main(args);
+            //no entra
             MINMINSchedulingAlgorithmExample.main(args);
         } catch (Exception e) {
             Log.printLine("ERROR: please check your workflow examples");

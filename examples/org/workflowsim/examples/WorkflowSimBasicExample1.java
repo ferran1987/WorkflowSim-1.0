@@ -61,6 +61,7 @@ public class WorkflowSimBasicExample1 {
     protected static List<CondorVM> createVM(int userId, int vms) {
         //Creates a container to store VMs. This list is passed to the broker later
         LinkedList<CondorVM> list = new LinkedList<>();
+    	System.out.println("NO ENTRA");
 
         //VM Parameters
         long size = 100000; //image size (MB)
@@ -187,13 +188,18 @@ public class WorkflowSimBasicExample1 {
         // Here are the steps needed to create a PowerDatacenter:
         // 1. We need to create a list to store one or more
         //    Machines
-        List<Host> hostList = new ArrayList<>();
+    	System.out.println("   WfSBaEx1.j WfDatac createDatac: List<Host> hostList = new ArrayList<>()");
+    											 // ArrayList Classe implementa List interfice
+        List<Host> hostList = new ArrayList<>(); // inicialitzo la llista hostList, la qual omplo amb elements de la classe <Host> (=[]) cal importar Host i java.utils.{List,ArrayList}
 
+    	System.out.println("   WfSBaEx1.j WfDatac createDatac: List<Pe> peList1 = new ArrayList<>()");
+   	
+    	
         // 2. A Machine contains one or more PEs or CPUs/Cores. Therefore, should
         //    create a list to store these PEs before creating
         //    a Machine.
-        for (int i = 1; i <= 20; i++) {
-            List<Pe> peList1 = new ArrayList<>();
+        for (int i = 1; i <= 1; i++) {            // ArrayList Classe implementa List interfice
+            List<Pe> peList1 = new ArrayList<>(); //ini la llista peList1, la qual omplo (add) amb elements de la classe <Pe> (=[]). Cal importar java.util.{List,ArrayList} i Pe 
             int mips = 6000;
             // 3. Create PEs and add these into the list.
             //for a quad-core machine, a list of 4 PEs is required:
@@ -202,8 +208,6 @@ public class WorkflowSimBasicExample1 {
             peList1.add(new Pe(2, new PeProvisionerSimple(mips)));
             peList1.add(new Pe(3, new PeProvisionerSimple(mips)));
 
-            
-            
             int hostId = 0;
             int ram = 12288; //host memory (MB)
             long storage = 1000000; //host storage
@@ -217,6 +221,11 @@ public class WorkflowSimBasicExample1 {
                             peList1,
                             new VmSchedulerTimeShared(peList1))); // This is our first machine
             //hostId++;
+            System.out.println("   WfSBaEx1.j WfDatac createDatac: hostList="+hostList); // hostList=[org.cloudbus.cloudsim.Host@x]
+            System.out.println("   WfSBaEx1.j WfDatac createDatac: peList1="+peList1);   // peList1=[org.cloudbus.cloudsim.Pe@x,..]
+            System.out.println("   WfSBaEx1.j WfDatac createDatac: peList="+peList1.get(0).getStatus()); // peList1=1
+		    //Pe.j es a org.cloudbus.cloudsim
+
         }
 
         // 4. Create a DatacenterCharacteristics object that stores the
@@ -261,6 +270,7 @@ public class WorkflowSimBasicExample1 {
      * @param list list of jobs
      */
     protected static void printJobList(List<Job> list) {
+    	System.out.println("   WfSBaEx1.j: printJobList");
         String indent = "    ";
         Log.printLine();
         Log.printLine("========== OUTPUT ==========");

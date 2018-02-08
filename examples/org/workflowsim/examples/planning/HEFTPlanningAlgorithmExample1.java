@@ -16,13 +16,17 @@
 package org.workflowsim.examples.planning;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import org.cloudbus.cloudsim.CloudletSchedulerSpaceShared;
+import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.workflowsim.CondorVM;
 import org.workflowsim.WorkflowDatacenter;
 import org.workflowsim.Job;
@@ -49,24 +53,42 @@ public class HEFTPlanningAlgorithmExample1 extends WorkflowSimBasicExample1 {
     protected static List<CondorVM> createVM(int userId, int vms) {
 
         //Creates a container to store VMs. This list is passed to the broker later
-        LinkedList<CondorVM> list = new LinkedList<>();
-
+        LinkedList<CondorVM> list = new LinkedList<>(); // declarem una LinkedList anomenada list, q tindra elements d la classe CondorVM
         //VM Parameters
         long size = 10000; //image size (MB)
         int ram = 512; //vm memory (MB)
         int mips = 1000;
         long bw = 1000;
-        int pesNumber = 1; //number of cpus
+        int pesNumber = 4; //number of cpus
         String vmm = "Xen"; //VMM name
-
+        System.out.println("   HEFT.j: LinkedList<CondorVM> list = new LinkedList<>()");
+        System.out.println("   HEFT.j: vms="+vms+"; int pesNumber="+pesNumber);     
+        List<Pe> PEsListToCondorVM = new ArrayList<>(); //fb
+        		
         //create VMs
         CondorVM[] vm = new CondorVM[vms];
+        System.out.print("   HEFT.j: CondorVM[] vm = new CondorVM[vms]\n");
+        System.out.print("   HEFT.j: vm="+vm+"\n"); // vm=[Lorg.wfs.CondorVM;@63947c6b
         Random bwRandom = new Random(System.currentTimeMillis());
         for (int i = 0; i < vms; i++) {
+            ////////////////////////fb comensa fb //////////////////////// 
+            for (int p=0; p<pesNumber;p++){
+            	System.out.println("Creo el pes:"+p+" de la vm["+i+"]");
+            	PEsListToCondorVM.add(new Pe(0, new PeProvisionerSimple(mips)));
+            	PEsListToCondorVM.add(new Pe(1, new PeProvisionerSimple(mips)));
+            	PEsListToCondorVM.add(new Pe(2, new PeProvisionerSimple(mips)));
+            	PEsListToCondorVM.add(new Pe(3, new PeProvisionerSimple(mips)));
+            }
+            ////////////////////////fb acaba fb //////////////////////// 
+        	
             double ratio = bwRandom.nextDouble();
-            vm[i] = new CondorVM(i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
+            vm[i] = new CondorVM(PEsListToCondorVM,i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
+            // fbised vm[i] = new CondorVM(i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
+            System.out.print("    HEFT.j: vm["+i+"]="+vm[i]+"  pes="+vm[i].getNumberOfPes()+"\n");
+            System.out.println("    HEFT.j:"+vm[i].getPEsListToCondorVM());
         }
+        System.out.println("   HEFT.j: return list="+list);
         return list;
     }
 

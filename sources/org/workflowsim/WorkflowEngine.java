@@ -364,7 +364,7 @@ public final class WorkflowEngine extends SimEntity {
      */
     @Override
     public void startEntity() {
-        Log.printLine(getName() + " is starting...");
+        Log.printLine("      WfEng.j sartEntity: " + getName() + " is starting...");
         schedule(getId(), 0, CloudSimTags.RESOURCE_CHARACTERISTICS_REQUEST);
     }
 

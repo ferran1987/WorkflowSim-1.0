@@ -16,7 +16,9 @@
 package org.workflowsim;
 
 import org.cloudbus.cloudsim.CloudletScheduler;
+import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Vm;
+import java.util.List; // fb
 
 /**
  * Condor Vm extends a VM: the difference is it has a locl storage system and it
@@ -77,6 +79,8 @@ public class CondorVM extends Vm {
      * @post $none
      */
     public CondorVM(
+    		//List PEsListToCondorVM, //fb
+    		List PEsListToCondorVM, //fb
             int id,
             int userId,
             double mips,
@@ -86,11 +90,13 @@ public class CondorVM extends Vm {
             long size,
             String vmm,
             CloudletScheduler cloudletScheduler) {
-        super(id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler);
+        super(PEsListToCondorVM,id, userId, mips, numberOfPes, ram, bw, size, vmm, cloudletScheduler); //fb added PEsListToCondorVM 
         /*
          * At the beginning all vm status is idle. 
          */
         setState(WorkflowSimTags.VM_STATUS_IDLE);
+        // per cada vm ve aqi una vegada 
+        System.out.println("      CondorVM.j: numberOfPes="+numberOfPes);
     }
 
     /**
@@ -138,6 +144,8 @@ public class CondorVM extends Vm {
         this.costPerBW = costPerBW;
         this.costPerMem = costPerMem;
         this.costPerStorage = costPerStorage;
+    	System.out.println("No entra");
+
     }
 
     /**

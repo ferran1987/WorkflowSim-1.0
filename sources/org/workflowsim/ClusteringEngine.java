@@ -326,7 +326,7 @@ public final class ClusteringEngine extends SimEntity {
      */
     @Override
     public void startEntity() {
-        Log.printLine(getName() + " is starting...");
+        Log.printLine("      ClusteringEngine.j startEntity(): " + getName() + " is starting...");
         schedule(getId(), 0, WorkflowSimTags.START_SIMULATION);
     }
 

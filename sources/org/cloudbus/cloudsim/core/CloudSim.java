@@ -183,9 +183,11 @@ public class CloudSim {
 	 * @post $none
 	 */
 	public static double startSimulation() throws NullPointerException {
-		Log.printLine("Starting CloudSim version " + CLOUDSIM_VERSION_STRING);
+		Log.printLine("   CloudSim.j startSimulation: Starting CloudSim version " + CLOUDSIM_VERSION_STRING);
 		try {
+			System.out.println("   CloudSim.j startSimulation: crida CloudSim.j run()");
 			double clock = run();
+			System.out.println("CloudSim.j startSimulation: torna de CloudSim.j run() (final de tot)");
 
 			// reset all static variables
 			cisId = -1;
@@ -343,7 +345,7 @@ public class CloudSim {
 	 * start of the simulation.
 	 */
 	protected static void initialize() {
-		Log.printLine("Initialising...");
+		Log.printLine("   Cloudsim.j initialize: Initialising ...");
 		entities = new ArrayList<SimEntity>();
 		entitiesByName = new LinkedHashMap<String, SimEntity>();
 		future = new FutureQueue();
@@ -511,6 +513,7 @@ public class CloudSim {
 		boolean queue_empty;
 		
 		int entities_size = entities.size();
+		//System.out.println("   CloudSim.j runClockTick(): va cridant SimEntity run(). Verificat");
 
 		for (int i = 0; i < entities_size; i++) {
 			ent = entities.get(i);
@@ -809,13 +812,14 @@ public class CloudSim {
 	 * simulations.
 	 */
 	public static void runStart() {
+    	System.out.println("   CloudSim.j runStart: crida SimEntity.j startEntity (buit)->WorkflowScheduler.j startEntity");
 		running = true;
 		// Start all the entities
 		for (SimEntity ent : entities) {
 			ent.startEntity();
 		}
-
-		printMessage("Entities started.");
+    	System.out.println("   CloudSim.j runStart: DP de SimEntity.j startEntity, torna a CloudSim.j runStart()");
+		printMessage("   CloudSim.j runStart: Entities started.");
 	}
 
 	/**
@@ -875,11 +879,15 @@ public class CloudSim {
 	 * @return the double last clock value
 	 */
 	public static double run() {
+		System.out.println("   CloudSim.j run: crida CloudSim.j runStart");
 		if (!running) {
 			runStart();
 		}
+		System.out.println("   CloudSim.j run: DP de CloudSim.j runStart, torna a run, crida runClockTick");
 		while (true) {
+			//System.out.println("xxx");
 			if (runClockTick() || abruptTerminate) {
+				System.out.println("CloudSim.j run(): hi entra al final");
 				break;
 			}
 
@@ -905,6 +913,7 @@ public class CloudSim {
 				}
 			}
 		}
+		System.out.println("CloudSim.j run(): despres de cridar CloudSim.j runStart, torna, ja al final");
 
 		double clock = clock();
 

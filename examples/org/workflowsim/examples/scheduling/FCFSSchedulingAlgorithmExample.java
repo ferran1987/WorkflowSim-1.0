@@ -57,7 +57,9 @@ public class FCFSSchedulingAlgorithmExample extends DataAwareSchedulingAlgorithm
             /**
              * Should change this based on real physical path
              */
-            String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
+            String daxPath = "/home/ferran/Escriptori/EclipseFerran/WorkflowSim-1.0-Predict/config/dax/Montage_100.xml";
+            //String daxPath = "/home/ferran/Escriptori/EclipseFerran/data_15_out.xml";
+            //String daxPath = "/Users/weiweich/NetBeansProjects/WorkflowSim-1.0/config/dax/Montage_100.xml";
 
             File daxFile = new File(daxPath);
             if (!daxFile.exists()) {

@@ -10,6 +10,7 @@ package org.cloudbus.cloudsim;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.cloudbus.cloudsim.Pe; //fb
 
 /**
  * Vm represents a VM: it runs inside a Host, sharing hostList with other VMs. It processes
@@ -22,6 +23,9 @@ import java.util.List;
  */
 public class Vm {
 
+	//private List PEsListToCondorVM;//fb
+	private List<? extends Pe> PEsListToCondorVM;//fb
+	
 	/** The id. */
 	private int id;
 
@@ -99,6 +103,9 @@ public class Vm {
 	 * @post $none
 	 */
 	public Vm(
+			//List<? extends Pe> PEsListToCondorVM, //fb
+			//setPEsListToCondorVM(PEsListToCondorVM),//fb
+			List<? extends Pe> PEsListToCondorVM, //fB
 			int id,
 			int userId,
 			double mips,
@@ -119,6 +126,7 @@ public class Vm {
 		setVmm(vmm);
 		setCloudletScheduler(cloudletScheduler);
 
+		setPEsListToCondorVM(PEsListToCondorVM);//fb
 		setInMigration(false);
 		setBeingInstantiated(true);
 
@@ -332,8 +340,30 @@ public class Vm {
 	 * 
 	 * @param numberOfPes the new number of pes
 	 */
-	protected void setNumberOfPes(int numberOfPes) {
-		this.numberOfPes = numberOfPes;
+	protected void setNumberOfPes(int numberOfPes) { //fb
+		this.numberOfPes = numberOfPes;//fb
+	}//fb
+	
+	/**
+	 * Gets la llista de Pes.
+	 * 
+	 * @param ListOfPes
+	 */
+	
+	public  <T extends Pe> List<T> getPEsListToCondorVM() { //fb. gets -> public, returns
+		return (List<T>) PEsListToCondorVM; //fb
+	}//fb
+	//public <T extends Pe> List<T> getPeList() {
+	//	return (List<T>) peList;
+	//}
+	
+	/**
+	 * Sets la llista de Pes
+	 * 
+	 * @param numberOfPes the new number of pes
+	*/ 
+	protected <T extends Pe> void setPEsListToCondorVM(List<T> PEsListToCondorVM) { //fb. sets -> protected, doesnt return
+		this.PEsListToCondorVM = PEsListToCondorVM;
 	}
 
 	/**
