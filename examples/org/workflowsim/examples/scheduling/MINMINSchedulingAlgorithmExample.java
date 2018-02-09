@@ -74,7 +74,7 @@ public class MINMINSchedulingAlgorithmExample extends DataAwareSchedulingAlgorit
              * override the result of the planner
              */
         	//System.out.println("MINMINSchAl.j main: Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN");
-            Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.MINMIN;
+            Parameters.SchedulingAlgorithm sch_method = Parameters.SchedulingAlgorithm.BIOBACKFILL;
         	//System.out.println("Nom Alg:"+sch_method.name()+". Classe:"+sch_method.getClass().getName());
         	Parameters.PlanningAlgorithm pln_method = Parameters.PlanningAlgorithm.INVALID;
             ReplicaCatalog.FileSystem file_system = ReplicaCatalog.FileSystem.LOCAL;

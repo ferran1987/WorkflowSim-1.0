@@ -61,19 +61,19 @@ public class HEFTPlanningAlgorithmExample1 extends WorkflowSimBasicExample1 {
         long bw = 1000;
         int pesNumber = 4; //number of cpus
         String vmm = "Xen"; //VMM name
-        System.out.println("   HEFT.j: LinkedList<CondorVM> list = new LinkedList<>()");
-        System.out.println("   HEFT.j: vms="+vms+"; int pesNumber="+pesNumber);     
+        // System.out.println("   HEFT.j: LinkedList<CondorVM> list = new LinkedList<>()");
+        // System.out.println("   HEFT.j: vms="+vms+"; int pesNumber="+pesNumber);     
         		
         //create VMs
         CondorVM[] vm = new CondorVM[vms];
-        System.out.print("   HEFT.j: CondorVM[] vm = new CondorVM[vms]\n");
-        System.out.print("   HEFT.j: vm="+vm+"\n"); // vm=[Lorg.wfs.CondorVM;@63947c6b
+        // System.out.print("   HEFT.j: CondorVM[] vm = new CondorVM[vms]\n");
+        // System.out.print("   HEFT.j: vm="+vm+"\n"); // vm=[Lorg.wfs.CondorVM;@63947c6b
         Random bwRandom = new Random(System.currentTimeMillis());
         for (int i = 0; i < vms; i++) {
             ////////////////////////fb comensa fb ////////////////////////
         	List<Pe> PEsListToCondorVM = new ArrayList<>();
             for (int p=0; p<pesNumber;p++){
-            	System.out.println("    HEFT.j: Creo el pes:"+p+" de la vm["+i+"]");
+                // System.out.println("    HEFT.j: Creo el pes:"+p+" de la vm["+i+"]");
             	PEsListToCondorVM.add(new Pe(p, new PeProvisionerSimple(mips)));
             }
             ////////////////////////fb acaba fb //////////////////////// 
@@ -81,10 +81,10 @@ public class HEFTPlanningAlgorithmExample1 extends WorkflowSimBasicExample1 {
             vm[i] = new CondorVM(PEsListToCondorVM,i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared()); //fb
             // fbised vm[i] = new CondorVM(i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
-            System.out.print("    HEFT.j: vm["+i+"]="+vm[i]+"  pes="+vm[i].getNumberOfPes()+"\n");
-            System.out.println("    HEFT.j:"+vm[i].getPEsListToCondorVM());
+            // System.out.print("    HEFT.j: vm["+i+"]="+vm[i]+"  pes="+vm[i].getNumberOfPes()+"\n");
+            // System.out.println("    HEFT.j:"+vm[i].getPEsListToCondorVM());
         }
-        System.out.println("   HEFT.j: return list="+list);
+        // System.out.println("   HEFT.j: return list="+list);
         return list;
     }
 

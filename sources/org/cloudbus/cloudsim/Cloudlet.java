@@ -127,6 +127,9 @@ public class Cloudlet {
 
 	/** The vm id. */
 	protected int vmId;
+	
+	/** The vm id. */
+	protected int PeId;
 
 	/** The cost per bw. */
 	protected double costPerBw;
@@ -1240,6 +1243,10 @@ public class Cloudlet {
 	public void setVmId(final int vmId) {
 		this.vmId = vmId;
 	}
+	
+	public void setPeId(final int PeId) { //fb
+		this.PeId = PeId; //fb
+	}	
 
 	/**
 	 * Returns the time the Cloudlet actually run.

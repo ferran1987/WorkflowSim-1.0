@@ -109,7 +109,7 @@ public class WorkflowScheduler extends DatacenterBroker {
                 break;
             // VM Creation answer
             case CloudSimTags.VM_CREATE_ACK:
-            	System.out.println("         WfSchr.j processEvent: crida processVmCreate");
+            	//System.out.println("         WfSchr.j processEvent: crida processVmCreate");
                 processVmCreate(ev);
                 break;
             // A finished cloudlet returned
@@ -123,11 +123,11 @@ public class WorkflowScheduler extends DatacenterBroker {
                 shutdownEntity();
                 break;
             case CloudSimTags.CLOUDLET_SUBMIT:
-                System.out.println("         WfSchr.j processEvent: va cridant processCloudletSubmit");
+                //System.out.println("         WfSchr.j processEvent: va cridant processCloudletSubmit");
                 processCloudletSubmit(ev);
                 break;
             case WorkflowSimTags.CLOUDLET_UPDATE:
-                System.out.println("         WfSchr.j processEvent: va cridant processCloudletUpdate");
+            	//System.out.println("         WfSchr.j processEvent: va cridant processCloudletUpdate");
                 processCloudletUpdate(ev);
                 break;
             default:
@@ -252,12 +252,12 @@ public class WorkflowScheduler extends DatacenterBroker {
 
         BaseSchedulingAlgorithm scheduler = getScheduler(Parameters.getSchedulingAlgorithm());
         scheduler.setCloudletList(getCloudletList());
-        System.out.println("         WfSchr.j BaseSchedulingAlgorithm scheduler = getScheduler(Parameters.getSchedulingAlgorithm())\n");
-        System.out.println("         WfSchr.j processCloudletUpdate(): scheduler.setCloudletList(getCloudletList()");
+        //System.out.println("         WfSchr.j BaseSchedulingAlgorithm scheduler = getScheduler(Parameters.getSchedulingAlgorithm())\n");
+        //System.out.println("         WfSchr.j processCloudletUpdate(): scheduler.setCloudletList(getCloudletList()");
         scheduler.setVmList(getVmsCreatedList());
 
         try {
-            System.out.println("         WfSchr.j processCloudletUpdate(): va cridant MinMin.j run (NOVA IT)");
+        	//System.out.println("         WfSchr.j processCloudletUpdate(): va cridant MinMin.j run (NOVA IT)");
             scheduler.run();
         } catch (Exception e) {
             Log.printLine("Error in configuring scheduler_method");
@@ -363,9 +363,9 @@ public class WorkflowScheduler extends DatacenterBroker {
     protected void processCloudletSubmit(SimEvent ev) {
         List<Job> list = (List) ev.getData();
         getCloudletList().addAll(list);
-        System.out.println("         WfSchr.j processCloudletSubmit: List<Job> list = (List) ev.getData()");
-        System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
-        System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList()="+getCloudletList());
+        //System.out.println("         WfSchr.j processCloudletSubmit: List<Job> list = (List) ev.getData()");
+        //System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
+        //System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList()="+getCloudletList());
         Log.printLine("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
         sendNow(this.getId(), WorkflowSimTags.CLOUDLET_UPDATE);
         if (!processCloudletSubmitHasShown) {
