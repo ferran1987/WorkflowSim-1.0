@@ -72,45 +72,54 @@ public class MinMinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
             } 																							// Ja hem repassat tt els non-checked jobs de "getCloudletList". Tenim minCloudlet (el +petit) i sa posicio            
             System.out.println("   MinMin.j: TROBAT. minCL(minIndex="+minIndex+")="+minCloudlet.getCloudletLength()+" vmSize="+getVmList().size()+" getVmList()="+getVmList());
             hasChecked.set(minIndex, true);  															// checkeja el minCloudlet
-            int vmSize = getVmList().size(); 				// vmNum decl a MINMIN.j. nProcs decl a MINMIN.j->HEFTP.j createVM
+            int vmSize = getVmList().size(); 															// vmNum decl a MINMIN.j. nProcs decl a MINMIN.j->HEFTP.j createVM
             CondorVM firstIdleVm = null;                    											// (CondorVM)getVmList().get(0); declaro firstIdleVm, tipus CondorVM, val null
 
+            ///////////////////////////////////////fb COMENSA "ABANS" ///////////////////////////////////////
             for (int nd = 0; nd < vmSize; nd++) { //fb
-                // f_CoVM(getState,setState..).f_CoVM_ext_Vm(getId,getVmList,getNumberOfPes,getCurrentRequestedTotalMips)            															
-
-            	CondorVM vmaq = (CondorVM) getVmList().get(nd); //getVmList:[org.wfs.CoVM@,..]; vmaq:org.wfs.CoVM@
-            	System.out.println("   MinMin.j: vmaq num="+nd+". vmaq.getNumOfPes:"+vmaq.getNumberOfPes()+". vmaq.getPEsListToCondorVM = "+vmaq.getPEsListToCondorVM());
-            	
-            	//System.out.println("   MinMin.j: Abans(mq="+nd+" | "+vmaq+")="+vmaq.getState()+". Nprocs="+vmaq.getNumberOfPes());          													  
-            	
+            	CondorVM vmaq = (CondorVM) getVmList().get(nd); 										//getVmList:[org.wfs.CoVM@,..]
+            	System.out.println("   MinMin.j: vmaq num="+nd+". vmaq.getNumPes:"+vmaq.getNumberOfPes()+". vmaq.getPEsListToCondorVM().size() = "+vmaq.getPEsListToCondorVM().size());
+            	System.out.println("   MinMin.j: vmaq.getPEsListToCondorVM = "+vmaq.getPEsListToCondorVM());
+            	for (int pe=0; pe< vmaq.getNumberOfPes(); pe++){
+            		System.out.println("    MinMin.j: Abans(EstatPE[v_maq="+nd+", pe="+vmaq.getPEsListToCondorVM().get(pe)+"])="+vmaq.getPEsListToCondorVM().get(pe).getStatus()); //vmaq.getPEsListToCondorVM().get(pe).setStatusFree(); vmaq.getPEsListToCondorVM().get(pe).setStatusBusy();            		            		
+            	}            	
+            	System.out.println("   MinMin.j: Abans(EstatMAQ[vmaq_n="+nd+"]="+vmaq.getState());          													              	
             }
-            for (int j = 0; j < vmSize; j++) { // cerco la 1a maq idle
-                CondorVM vm = (CondorVM) getVmList().get(j); // variable vm del tipus CondorVM
+            ///////////////////////////////////////fb ACABA "ABANS" ///////////////////////////////////////
+            
+            for (int j = 0; j < vmSize; j++) { 															// cerco la 1a maq idle
+                CondorVM vm = (CondorVM) getVmList().get(j); 											// variable vm del tipus CondorVM
                 if (vm.getState() == WorkflowSimTags.VM_STATUS_IDLE) {
                 	// JUGAR AMB MAQUINA SEMI-IDLE I MIRANT QUINA MAQUINA HI HA OCUPADA
                     firstIdleVm = vm;
-                    break; 							// va a: if (firstIdleVm == null) {
+                    break; 																				// va a: if (firstIdleVm == null) {
                 }
             }
             if (firstIdleVm == null) {
-            	break;// cap maq idle. break ens porta a public void run() { .System.out.println("TOTES MAQS BUSY");
+            	break;																					// cap maq idle. va a public void run() {
             }
-            for (int j = 0; j < vmSize; j++) { // maq a maq d la llista d maqs
+            for (int j = 0; j < vmSize; j++) { 															// maq a maq d la llista d maqs
                 CondorVM vm = (CondorVM) getVmList().get(j);
                 if ((vm.getState() == WorkflowSimTags.VM_STATUS_IDLE)
                         && vm.getCurrentRequestedTotalMips() > firstIdleVm.getCurrentRequestedTotalMips()) {
-                    firstIdleVm = vm; // firstIdleVm = maq idle amb mes mips (em qedo amb la maq idle q tingui mes mips)
-                }					  // mips es la pot de calcul. es fa servir x calc el temps dexecucio (no x mi sino q ho usa el simulador)
+                    firstIdleVm = vm; 																	// firstIdleVm = maq idle amb mes mips (em qedo amb la maq idle q tingui mes mips)
+                }					  																	// mips es la pot de calcul. es fa servir x calc el temps dexecucio (no x mi sino q ho usa el simulador)
             }
-            firstIdleVm.setState(WorkflowSimTags.VM_STATUS_BUSY); // firstIdleVm passa idle (1004) a busy (1003) (firstIdleVm.getState())
-            minCloudlet.setVmId(firstIdleVm.getId());			  // hi alloco minCloudlet
-            getScheduledList().add(minCloudlet); // afegeixo el job "minCloudled" a la llista de jobs x schedular
+            firstIdleVm.setState(WorkflowSimTags.VM_STATUS_BUSY); 										// firstIdleVm passa idle (1004) a busy (1003) (firstIdleVm.getState())
+            minCloudlet.setVmId(firstIdleVm.getId());			  										// hi alloco minCloudlet
+            getScheduledList().add(minCloudlet); 														// afegeixo el job "minCloudled" a la llista de jobs x schedular
             
-            for (int j = 0; j < vmSize; j++) { //ferran: estat maqs dp de schedular
+            ///////////////////////////////////////fb COMENSA "DESPRES" ///////////////////////////////////////
+
+            for (int j = 0; j < vmSize; j++) { //fb: estat maqs dp de schedular
             	CondorVM vmaq = (CondorVM) getVmList().get(j);
-            	System.out.println("   MinMin.j: Despres(mq="+j+" | "+vmaq+")="+vmaq.getState()+". Nprocs="+vmaq.getNumberOfPes());
+            	for (int pe = 0; pe < vmaq.getNumberOfPes(); pe++) {
+            		System.out.println("    MinMin.j: Despres(EstatPE[v_maq="+j+", pe="+vmaq.getPEsListToCondorVM().get(pe)+"])="+vmaq.getPEsListToCondorVM().get(pe).getStatus()); //vmaq.getPEsListToCondorVM().get(pe).setStatusFree(); vmaq.getPEsListToCondorVM().get(pe).setStatusBusy();            		            		
+            	}
+            	System.out.println("   MinMin.j: Despres(EstatMAQ[vmaq_n="+j+"])="+vmaq.getState());          													              	
             }
+            ///////////////////////////////////////fb ACABA "DESPRES" ///////////////////////////////////////
             
-        }   // un cop el job sta schedulat, seguim recorrent la llista (anem a for (int i = 0; i < size; i++) {)
+        }  																								 // un cop el job sta schedulat, seguim recorrent la llista (anem a for (int i = 0; i < size; i++) {)
     }
 }

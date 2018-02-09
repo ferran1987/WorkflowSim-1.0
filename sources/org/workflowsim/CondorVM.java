@@ -125,7 +125,7 @@ public class CondorVM extends Vm {
      * @pre cloudletScheduler != null
      * @post $none
      */
-    public CondorVM(
+    /*public CondorVM(
             int id,
             int userId,
             double mips,
@@ -147,7 +147,7 @@ public class CondorVM extends Vm {
     	System.out.println("No entra");
 
     }
-
+*/
     /**
      * Gets the CPU cost
      *

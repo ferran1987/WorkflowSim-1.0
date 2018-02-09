@@ -23,7 +23,6 @@ import org.cloudbus.cloudsim.Pe; //fb
  */
 public class Vm {
 
-	//private List PEsListToCondorVM;//fb
 	private List<? extends Pe> PEsListToCondorVM;//fb
 	
 	/** The id. */
@@ -105,7 +104,7 @@ public class Vm {
 	public Vm(
 			//List<? extends Pe> PEsListToCondorVM, //fb
 			//setPEsListToCondorVM(PEsListToCondorVM),//fb
-			List<? extends Pe> PEsListToCondorVM, //fB
+			List<? extends Pe> PEsListToCondorVM, //fb
 			int id,
 			int userId,
 			double mips,

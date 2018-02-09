@@ -63,7 +63,6 @@ public class HEFTPlanningAlgorithmExample1 extends WorkflowSimBasicExample1 {
         String vmm = "Xen"; //VMM name
         System.out.println("   HEFT.j: LinkedList<CondorVM> list = new LinkedList<>()");
         System.out.println("   HEFT.j: vms="+vms+"; int pesNumber="+pesNumber);     
-        List<Pe> PEsListToCondorVM = new ArrayList<>(); //fb
         		
         //create VMs
         CondorVM[] vm = new CondorVM[vms];
@@ -71,18 +70,15 @@ public class HEFTPlanningAlgorithmExample1 extends WorkflowSimBasicExample1 {
         System.out.print("   HEFT.j: vm="+vm+"\n"); // vm=[Lorg.wfs.CondorVM;@63947c6b
         Random bwRandom = new Random(System.currentTimeMillis());
         for (int i = 0; i < vms; i++) {
-            ////////////////////////fb comensa fb //////////////////////// 
+            ////////////////////////fb comensa fb ////////////////////////
+        	List<Pe> PEsListToCondorVM = new ArrayList<>();
             for (int p=0; p<pesNumber;p++){
-            	System.out.println("Creo el pes:"+p+" de la vm["+i+"]");
-            	PEsListToCondorVM.add(new Pe(0, new PeProvisionerSimple(mips)));
-            	PEsListToCondorVM.add(new Pe(1, new PeProvisionerSimple(mips)));
-            	PEsListToCondorVM.add(new Pe(2, new PeProvisionerSimple(mips)));
-            	PEsListToCondorVM.add(new Pe(3, new PeProvisionerSimple(mips)));
+            	System.out.println("    HEFT.j: Creo el pes:"+p+" de la vm["+i+"]");
+            	PEsListToCondorVM.add(new Pe(p, new PeProvisionerSimple(mips)));
             }
             ////////////////////////fb acaba fb //////////////////////// 
-        	
-            double ratio = bwRandom.nextDouble();
-            vm[i] = new CondorVM(PEsListToCondorVM,i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
+        	double ratio = bwRandom.nextDouble();
+            vm[i] = new CondorVM(PEsListToCondorVM,i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared()); //fb
             // fbised vm[i] = new CondorVM(i, userId, mips * ratio, pesNumber, ram, (long) (bw * ratio), size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
             System.out.print("    HEFT.j: vm["+i+"]="+vm[i]+"  pes="+vm[i].getNumberOfPes()+"\n");
