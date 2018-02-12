@@ -44,6 +44,19 @@ public class WorkflowSimTags {
     public static final int JOB_SUBMIT = BASE + 1;
     public static final int CLOUDLET_UPDATE = BASE + 5;
     public static final int CLOUDLET_CHECK = BASE + 6;
+    
+    public static final int VM_STATUS_BL = BASE + 10; //fb: blast 
+    public static final int VM_STATUS_BM = BASE + 11; //fb: bwamem
+    public static final int VM_STATUS_BO = BASE + 12; //fb: bowtie
+    public static final int VM_STATUS_BW = BASE + 13; //fb: bwaaling
+    public static final int VM_STATUS_HI = BASE + 14; //fb: hisat
+    public static final int VM_STATUS_ST = BASE + 15; //fb: star
+    public static final int VM_STATUS_SO = BASE + 16; //fb: soap
+    public static final int VM_STATUS_PH = BASE + 17; //fb: phyml
+    public static final int VM_STATUS_MR = BASE + 18; //fb: mrbayes
+    public static final int VM_STATUS_FA = BASE + 19; //fb: fasttree
+    public static final int VM_STATUS_RA = BASE + 20; //fb: raxml
+    
 
     /**
      * Private Constructor

@@ -363,6 +363,7 @@ public class WorkflowScheduler extends DatacenterBroker {
     protected void processCloudletSubmit(SimEvent ev) {
         List<Job> list = (List) ev.getData();
         getCloudletList().addAll(list);
+        ///System.out.println("zzz"+list);
         //System.out.println("         WfSchr.j processCloudletSubmit: List<Job> list = (List) ev.getData()");
         //System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList().addAll(list)");
         //System.out.println("         WfSchr.j processCloudletSubmit: getCloudletList()="+getCloudletList());

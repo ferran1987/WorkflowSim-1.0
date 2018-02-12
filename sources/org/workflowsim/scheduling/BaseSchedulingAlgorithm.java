@@ -38,7 +38,7 @@ public abstract class BaseSchedulingAlgorithm implements SchedulingAlgorithmInte
      * the vm list.
      */
     private List<? extends Vm> vmList; // declarem la variable vmList com llista q tindra elements <? extends Vm>
-    private List<? extends Vm> fbList;
+    //private List<? extends Vm> fbList;
     /**
      * the scheduled job list.
      */
@@ -91,9 +91,9 @@ public abstract class BaseSchedulingAlgorithm implements SchedulingAlgorithmInte
         return this.vmList;
     }
     
-    public List getFbList() {
-        return this.fbList;
-    }
+    //public List getFbList() {
+    //    return this.fbList;
+    //}
 
     /**
      * The main function

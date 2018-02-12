@@ -47,6 +47,7 @@ public class Job extends Task {
      * @post $none
      */
     public Job(
+    		//final String typeFb, //fb
             final int jobId,
             final long jobLength) {
 

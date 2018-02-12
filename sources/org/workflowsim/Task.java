@@ -84,6 +84,7 @@ public class Task extends Cloudlet {
      * @post $none
      */
     public Task(
+    		//final String type, //fb
             final int taskId,
             final long taskLength) {
         /**
@@ -93,7 +94,7 @@ public class Task extends Cloudlet {
          * and utilizationModelBw are just set to be the default mode. You can
          * change it for your own purpose.
          */
-        super(taskId, taskLength, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
+        super(taskId, taskLength, 1, 0, 0, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull()); //fb he tret type
 
         this.childList = new ArrayList<>();
         this.parentList = new ArrayList<>();

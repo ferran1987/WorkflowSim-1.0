@@ -27,6 +27,18 @@ public class Pe {
 	/** Denotes Pe is allocated and hence busy in processing Cloudlet. */
 	public static final int BUSY = 2;
 
+    public static final int VM_STATUS_BL = 3; //fb: blast 
+    public static final int VM_STATUS_BM = 4; //fb: bwamem
+    public static final int VM_STATUS_BO = 5; //fb: bowtie
+    public static final int VM_STATUS_BW = 6; //fb: bwaaling
+    public static final int VM_STATUS_HI = 7; //fb: hisat
+    public static final int VM_STATUS_ST = 8; //fb: star
+    public static final int VM_STATUS_SO = 9; //fb: soap
+    public static final int VM_STATUS_PH = 10; //fb: phyml
+    public static final int VM_STATUS_MR = 11; //fb: mrbayes
+    public static final int VM_STATUS_FA = 12; //fb: fasttree
+    public static final int VM_STATUS_RA = 13; //fb: raxml
+	
 	/**
 	 * Denotes Pe is failed and hence it can't process any Cloudlet at this moment. This Pe is
 	 * failed because it belongs to a machine which is also failed.

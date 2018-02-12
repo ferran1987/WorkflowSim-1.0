@@ -110,12 +110,14 @@ public final class WorkflowParser {
         this.schedMethod = Parameters.getSchedulingAlgorithm(); // to identify if predictive is selected
 
         setTaskList(new ArrayList<Task>());
+        //System.out.println("   WfPar.j WorkflowParser");
     }
 
     /**
      * Start to parse a workflow which is a xml file(s).
      */
     public void parse() {
+    	System.out.println("   WfPar.j parse");
         if (this.daxPath != null) {
             parseXmlFile(this.daxPath);
         } else if (this.daxPaths != null) {
@@ -392,7 +394,7 @@ public final class WorkflowParser {
     private void parseXmlFile(String path) {
 
         try {
-
+        	//System.out.println("   WfPar.j parseXmlFile");
             SAXBuilder builder = new SAXBuilder();
             //parse using builder to get DOM representation of the XML file
             Document dom = builder.build(new File(path));
@@ -401,16 +403,17 @@ public final class WorkflowParser {
             for (Element node : list) {
                 switch (node.getName().toLowerCase()) {
                     case "job":
+                    	// SI ENTRA
                         long length = 0;
                         String nodeName = node.getAttributeValue("id");
-                        String nodeType = node.getAttributeValue("name");
+                        String nodeType = node.getAttributeValue("name"); // nodeType es el nom del job
                         /**
                          * capture runtime. If not exist, by default the runtime
                          * is 0.1. Otherwise CloudSim would ignore this task.
                          * BUG/#11
                          */
                         double runtime=0;
-
+                        // CESAR, no entra
                         if (Parameters.getSchedulingAlgorithm()==Parameters.SchedulingAlgorithm.PREDICT){
                         	runtime=parsePredictFile("/home/ceag/WorkflowGenerator-master/SyntheticWorkflows/"+nodeType+".xml");
                             if (runtime < 100) {
@@ -418,7 +421,7 @@ public final class WorkflowParser {
                             }
                             length = (long) runtime;
                         }
-
+                        // NO CESAR, entra (1 cop x job
                         if ((node.getAttributeValue("runtime") != null) && (Parameters.getSchedulingAlgorithm()!= Parameters.SchedulingAlgorithm.PREDICT)) {
                             String nodeTime = node.getAttributeValue("runtime");
                             runtime = 1000 * Double.parseDouble(nodeTime);
@@ -426,10 +429,13 @@ public final class WorkflowParser {
                                 runtime = 100;
                             }
                             length = (long) runtime;
+                            //System.out.println("   WfPar.j parseXmlFile: definim el temps dexecucio (runtime, aka length)");
                         } else if (runtime == 0) {
                             Log.printLine("Cannot find runtime for " + nodeName + ",set it to be 0");
                         }   //multiple the scale, by default it is 1.0
                         length *= Parameters.getRuntimeScale();
+                        
+                        
 
                         List<Element> fileList = node.getChildren();
                         List<FileItem> mFileList = new ArrayList<>();
