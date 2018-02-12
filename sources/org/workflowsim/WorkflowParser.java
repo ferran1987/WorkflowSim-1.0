@@ -280,10 +280,11 @@ public final class WorkflowParser {
                         
                         //In case of multiple workflow submission. Make sure the jobIdStartsFrom is consistent.
                       //  synchronized (this) {
-                            task = new Task(jobIdStartsFromPredict, length);
+                            String nodeTypefb = node.getAttributeValue("name");
+                            task = new Task(nodeTypefb,jobIdStartsFromPredict, length);
                             jobIdStartsFromPredict++;
                   //      }
-                        
+
                         task.setType(nodeType);
                         task.setUserId(userId);
                         task.setNumberOfPes(numberOfCores);
@@ -517,9 +518,13 @@ public final class WorkflowParser {
                         Task task;
                         //In case of multiple workflow submission. Make sure the jobIdStartsFrom is consistent.
                         synchronized (this) {
-                            task = new Task(this.jobIdStartsFrom, length);
+                            task = new Task(nodeType,this.jobIdStartsFrom, length);
+                            System.out.println("rrr"+node.getAttributeValue("name"));
+
                             this.jobIdStartsFrom++;
                         }
+                        task.setCloudletFb(node.getAttributeValue("name"));
+                        System.out.println("kkk"+task.getCloudletFb());
                         task.setType(nodeType);
                         task.setUserId(userId);
                         mName2Task.put(nodeName, task);

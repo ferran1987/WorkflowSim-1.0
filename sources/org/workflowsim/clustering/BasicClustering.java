@@ -162,12 +162,12 @@ public class BasicClustering implements ClusteringInterface {
     protected final Job addTasks2Job(List<Task> taskList) {
         if (taskList != null && !taskList.isEmpty()) {
             int length = 0;
-
-            int userId = 0;
+            String namefb="";
+            int userId = 0	;
             int priority = 0;
             int depth = 0;
             /// a bug of cloudsim makes it final of input file size and output file size
-            Job job = new Job(idIndex, length/*, inputFileSize, outputFileSize*/);
+            Job job = new Job(namefb,idIndex, length/*, inputFileSize, outputFileSize*/);
             job.setClassType(ClassType.COMPUTE.value);
             for (Task task : taskList) {
                 length += task.getCloudletLength();
@@ -259,7 +259,8 @@ public class BasicClustering implements ClusteringInterface {
 
         if (root == null) {
             //bug maybe
-            root = new Task(taskList.size() + 1, 0/*,0,0*/);
+        	String namefb="";
+            root = new Task(namefb,taskList.size() + 1, 0/*,0,0*/);
             for (Task node : taskList) {
                 if (node.getParentList().isEmpty()) {
                     node.addParent(root);

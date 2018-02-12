@@ -135,7 +135,11 @@ public class BioBackfillSchedulingAlgorithm extends BaseSchedulingAlgorithm {
             getScheduledList().add(minCloudlet); 														// afegeixo el job "minCloudled" a la llista de jobs x schedular
             
             System.out.println("BioB.j minClo.getCloId()="+minCloudlet.getCloudletId());
+            minCloudlet.getCloudletFb();
+            System.out.println("BioB.j minClo.getCloFb()="+minCloudlet.getCloudletFb());
+            System.out.println("zzz");
             Task minTask =(Task) minCloudlet;
+            //minTask.setType("ferraaaaaaaaaaaaaaaaaaan");
             System.out.println("zzzz"+minTask.getType());
             
             

@@ -51,7 +51,7 @@ public class Cloudlet {
 	/** The cloudlet ID. */
 	private final int cloudletId;
 	
-	//private final String cloudletFb;
+	public String cloudletFb;
 
 	/** The status of this Cloudlet. */
 	private int status;
@@ -176,7 +176,7 @@ public class Cloudlet {
 	 * @post $none
 	 */
 	public Cloudlet(
-			//final String cloudletFb,
+			String cloudletFb,
 			final int cloudletId,
 			final long cloudletLength,
 			final int pesNumber,
@@ -186,7 +186,7 @@ public class Cloudlet {
 			final UtilizationModel utilizationModelRam,
 			final UtilizationModel utilizationModelBw) {
 		this(
-				//cloudletFb,
+				cloudletFb,
 				cloudletId,
 				cloudletLength,
 				pesNumber,
@@ -196,6 +196,7 @@ public class Cloudlet {
 				utilizationModelRam,
 				utilizationModelBw,
 				false);
+		System.out.println("aaa"+cloudletFb);
 		vmId = -1;
 		accumulatedBwCost = 0.0;
 		costPerBw = 0.0;
@@ -227,7 +228,7 @@ public class Cloudlet {
 	 * @post $none
 	 */
 	public Cloudlet(
-			//final String cloudletFb,
+			String cloudletFb,
 			final int cloudletId,
 			final long cloudletLength,
 			final int pesNumber,
@@ -239,7 +240,7 @@ public class Cloudlet {
 			final boolean record,
 			final List<String> fileList) {
 		this(
-				//cloudletFb,
+				cloudletFb,
 				cloudletId,
 				cloudletLength,
 				pesNumber,
@@ -279,7 +280,7 @@ public class Cloudlet {
 	 * @post $none
 	 */
 	public Cloudlet(
-			//final String cloudletFb,
+			String cloudletFb,
 			final int cloudletId,
 			final long cloudletLength,
 			final int pesNumber,
@@ -290,7 +291,7 @@ public class Cloudlet {
 			final UtilizationModel utilizationModelBw,
 			final List<String> fileList) {
 		this(
-				//cloudletFb,
+				cloudletFb,
 				cloudletId,
 				cloudletLength,
 				pesNumber,
@@ -330,7 +331,7 @@ public class Cloudlet {
 	 * @post $none
 	 */
 	public Cloudlet(
-			//final String cloudletFb,
+			String cloudletFb,
 			final int cloudletId,
 			final long cloudletLength,
 			final int pesNumber,
@@ -342,7 +343,7 @@ public class Cloudlet {
 			final boolean record) {
 		userId = -1;          // to be set by a Broker or user
 		status = CREATED;
-		//this.cloudletFb = cloudletFb;
+		this.cloudletFb = cloudletFb;
 		this.cloudletId = cloudletId;
 		numberOfPes = pesNumber;
 		execStartTime = 0.0;
@@ -1232,9 +1233,9 @@ public class Cloudlet {
 		return cloudletId;
 	}
 
-	//public String getCloudletFb() {
-	//	return cloudletFb;
-	//}
+	public String getCloudletFb() {
+		return cloudletFb;
+	}
 	
 	/**
 	 * Gets the ID of the VM that will run this Cloudlet.
@@ -1256,6 +1257,11 @@ public class Cloudlet {
 	 */
 	public void setVmId(final int vmId) {
 		this.vmId = vmId;
+	}
+	
+	
+	public void setCloudletFb(String cloudletFb) {
+		this.cloudletFb = cloudletFb;
 	}
 	
 	public void setPeId(final int PeId) { //fb
